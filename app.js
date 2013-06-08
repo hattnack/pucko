@@ -7,7 +7,8 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , WebSocketServer = require('websocket').server
-  , currentID = 0;
+  , currentID = 0
+  , clients = {};
 
 var app = express();
 
@@ -53,9 +54,8 @@ function setupConnection(connection) {
     var client, clientID;
 
     for (clientID in clients) {
-      client = clients[clientID];
-      if (clientID !== ID) {
-        client.connection.sendUTF(message.utf8Data);
+      if (+clientID !== ID) {
+        client = clients[clientID].connection.sendUTF(message.utf8Data);
       }
     }
   });
