@@ -49,7 +49,7 @@
 
   Player.prototype.clientRemove = function() {
     Pucko.stage.removeChild(this.sprite);
-    Pucko.$.off("beforeReder." + this.id);
+    Pucko.$.off("beforeRender." + this.id);
   }
 
   Player.prototype.serverInit = function() {
