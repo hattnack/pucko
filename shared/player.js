@@ -11,7 +11,10 @@
       down: false
     };
 
-    this.speed = 150;
+    this.speed = 120;
+    this.dx = 0;
+    this.dy = 0;
+    this.acc = 0.4;
     this.x = options.x || 200;
     this.y = options.y || 150;
 
@@ -29,10 +32,13 @@
     this.sprite.anchor.x = 0.5;
     this.sprite.anchor.y = 0.5;
 
+    console.log(Pucko);
     this.sprite.position.x = this.x;
     this.sprite.position.y = this.y;
 
     Pucko.stage.addChild(this.sprite);
+
+    console.log(Pucko.data.friction);
 
     var player = this;
     Pucko.$.on("beforeRender." + this.id, function(e, data) {
@@ -99,21 +105,64 @@
         prevY = this.y;
 
     if (this.moving.left) {
-      this.x -= this.speed * secondsDelta;
+      if(this.dx > -this.speed){
+        this.dx -= this.acc;
+      } else {
+        this.dx = -this.speed;
+      }
+      // this.x -= this.speed * secondsDelta;
     }
 
     if (this.moving.right) {
-      this.x += this.speed * secondsDelta;
+      if(this.dx < this.speed){
+        this.dx += this.acc;
+      } else {
+        this.dx = this.speed;
+      }
+      // this.x += this.speed * secondsDelta;
     }
 
     if (this.moving.up) {
-      this.y -= this.speed * secondsDelta;
+      // this.y -= this.speed * secondsDelta;
+      if(this.dy > -this.speed){
+        this.dy -= this.acc;
+      } else {
+        this.dy = -this.speed;
+      }
+      
     }
 
     if (this.moving.down) {
-      this.y += this.speed * secondsDelta;
+      // this.y += this.speed * secondsDelta;
+      if(this.dy < this.speed){
+        this.dy += this.acc;
+      } else {
+        this.dy = this.speed;
+      }
+
     }
 
+
+
+    this.x += this.dx;
+    this.y += this.dy;
+    if(this.x + this.texture.width/2 >= Pucko.data.width) { 
+      this.x = Pucko.data.width - this.texture.width;
+      this.dx *= -1;
+    }
+    if(this.x <= 0 + this.texture.width/2){
+      this.x = 0 + this.texture.width/2;
+      this.dx *= -1; 
+    }
+    if(this.y + this.texture.height/2 >= Pucko.data.height){
+      this.y = Pucko.data.height - this.texture.height/2;
+      this.dy *= -1; 
+    }
+    if(this.y <= 0 + this.texture.height/2){
+      this.y = 0 + this.texture.height/2;
+      this.dy *= -1;  
+    }
+    // this.y += this.dy;
     if (prevX != this.x || prevY != this.y)
       Pucko.sync.trigger("playerMove", {id: this.id, x: this.x, y: this.y })
   }
@@ -121,6 +170,10 @@
   Player.prototype.render = function() {
     this.sprite.position.x = this.x;
     this.sprite.position.y = this.y;
+
+    this.dx *= Pucko.data.friction;
+    this.dy *= Pucko.data.friction;
+    // console.log(Pucko.data);
   }
 
   Player.prototype.serialize = function() {
