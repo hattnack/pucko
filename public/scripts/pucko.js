@@ -88,6 +88,7 @@
 
     shake: function(intensity) {
       var $canvas = $("canvas");
+      intensity -= 1;
       var x = intensity * (Math.random() > 0.5 ? -1 : 1);
       var y = intensity * (Math.random() > 0.5 ? -1 : 1);
       $canvas.css("-webkit-transform", "translate3D(" + x + "px," + y + "px, 0)");
