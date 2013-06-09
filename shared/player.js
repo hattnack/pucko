@@ -28,7 +28,8 @@
   }
 
   Player.prototype.clientInit = function() {
-    this.texture = PIXI.Texture.fromImage("public/images/bunny.png");
+    this.texture = PIXI.Texture
+      .fromImage("public/images/bunny" + (_.keys(Pucko.players).length + 1) + ".png");
     this.sprite = new PIXI.Sprite(this.texture);
 
     this.sprite.anchor.x = 0.5;
