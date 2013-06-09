@@ -23,13 +23,13 @@
         fill: "rgba(189,71,71,0.2)"
       }
 
-      this.leftPoints = new PIXI.Text('120', textStyle);
+      this.leftPoints = new PIXI.Text("" + this.teamScores[0], textStyle);
       this.leftPoints.anchor.x = 0;
       this.leftPoints.anchor.y = 0.15;
       this.leftPoints.position.x = 30;
       this.leftPoints.position.y = Pucko.globals.height / 2 - 70/2;
 
-      this.rightPoints = new PIXI.Text('3230', textStyle);
+      this.rightPoints = new PIXI.Text("" + this.teamScores[1], textStyle);
       this.rightPoints.anchor.x = 1;
       this.rightPoints.anchor.y = 0.15;
 
@@ -52,7 +52,8 @@
 
       Pucko.sync.on("score", function(event, data) {
         Pucko.teamScores[data.team] = data.score;
-        console.log(Pucko.teamScores);
+        Pucko.leftPoints.setText("" + Pucko.teamScores[0]);
+        Pucko.rightPoints.setText("" + Pucko.teamScores[1]);
       });
 
       Pucko.puck = new Pucko.Puck({});
