@@ -9,6 +9,12 @@
     init: function() {
       this.stage = new PIXI.Stage(0x66FF99);
       this.renderer = PIXI.autoDetectRenderer(Pucko.globals.width, Pucko.globals.height);
+      this.background = PIXI.Texture.fromImage('public/images/background.png');
+      this.backgroundSprite = new PIXI.Sprite(this.background);
+      this.backgroundSprite.position.x = 0;
+      this.backgroundSprite.position.y = 0;
+
+      Pucko.stage.addChild(this.backgroundSprite);
 
       this.initPlayers(Pucko.sync.initData.players);
       Pucko.sync.on("playerConnected", function(e, id) {
