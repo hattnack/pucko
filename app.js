@@ -12,6 +12,8 @@ var express = require('express')
   , serverEvents = new (require('events').EventEmitter)()
   , lastFrameTime = Date.now()
   , Player = require('./shared/player')
+  , teamPlayers = [0, 0]
+  , teamScores = [0, 0]
   , puck = new (require('./shared/puck'))({serverEvents: serverEvents});
 
 var app = express();
@@ -51,6 +53,20 @@ webSocketServer.on("request", function(req) {
 
 setInterval(nextFrame, 1000 / 60);
 
+serverEvents.on("score", function(team) {
+  json = JSON.stringify({
+    event: "score",
+    data: {
+      team: team,
+      score: ++teamScores[team]
+    }
+  });
+
+  for (var clientID in clients) {
+      clients[clientID].connection.sendUTF(json);
+  }
+});
+
 function setupConnection(connection) {
   var ID = currentID++;
   var players = (function() {
@@ -65,14 +81,20 @@ function setupConnection(connection) {
     connection: connection
   };
 
+  var team = 0;
+  if (teamPlayers[0] > teamPlayers[1]) {
+    team = 1;
+  }
+  teamPlayers[team]++;
+
   connection.sendUTF(JSON.stringify({event: "receiveInitData", data: {
     id: ID,
+    team: team,
+    teamScores: teamScores,
     players: players
   }}));
 
-  if (players.length < 2) {
-    clients[ID].player = new Player({id: ID, serverEvents: serverEvents});
-  }
+  clients[ID].player = new Player({id: ID, team: team, serverEvents: serverEvents});
 
   connection.on("message", function(message) {
     var client, clientID, json;
@@ -90,6 +112,7 @@ function setupConnection(connection) {
   connection.on("close", function(reasonCode, description) {
     if(clients[ID].player) {
       clients[ID].player.serverRemove();
+      teamPlayers[clients[ID].player.team]--;
       for (var clientID in clients) {
         if (+clientID !== ID) {
           client = clients[clientID].connection.sendUTF(JSON.stringify({

@@ -64,13 +64,9 @@ if (typeof require !== "undefined") {
     this.y += this.dy;
 
     if ((this.x + this.width / 2) > globals.width) {
-      console.log(globals.height / 2 + globals.goalWidth / 2);
       if (this.y < (globals.height / 2 + globals.goalWidth / 2) &&
           this.y > (globals.height / 2 - globals.goalWidth / 2)) {
-        console.log("TEAM RED GOAL");
-        this.inPlay = false;
-        this.x = -100;
-        setTimeout(this.reset.bind(this), 2000);
+        this.score(0);
       } else {
         this.dx *= -1;
         this.x = globals.width - this.width / 2;
@@ -78,10 +74,7 @@ if (typeof require !== "undefined") {
     } else if ((this.x - this.width / 2) < 0) {
       if (this.y < (globals.height / 2 + globals.goalWidth / 2) &&
           this.y > (globals.height / 2 - globals.goalWidth / 2)) {
-        console.log("TEAM BLUE GOAL");
-        this.inPlay = false;
-        this.x = -100;
-        setTimeout(this.reset.bind(this), 2000);
+        this.score(1);
       } else {
         this.dx *= -1;
         this.x = 0 + this.width / 2;
@@ -99,6 +92,13 @@ if (typeof require !== "undefined") {
     this.dx *= globals.puckFriction;
     this.dy *= globals.puckFriction;
   };
+
+  Puck.prototype.score = function(team) {
+    this.serverEvents.emit("score", team);
+    this.inPlay = false;
+    this.x = -100;
+    setTimeout(this.reset.bind(this), 2000);
+  }
 
   Puck.prototype.shoot = function(player) {
     var x = player.x,

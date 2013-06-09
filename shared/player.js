@@ -1,6 +1,13 @@
+var globals;
+if (typeof require !== "undefined") {
+  globals = require("./globals");
+} else {
+  globals = Pucko.globals;
+}
 (function() {
   function Player(options) {
     this.id = options.id;
+    this.team = options.team;
     this.local = options.local || false;
     this.serverEvents = options.serverEvents || null;
 
@@ -11,14 +18,14 @@
       down: false
     };
 
-    this.shooting = true
+    this.shooting = true;
 
     this.speed = 120;
     this.dx = 0;
     this.dy = 0;
     this.acc = 0.4;
-    this.x = options.x || 200;
-    this.y = options.y || 150;
+    this.x = options.x || globals.width / 2 + (this.team === 0 ? -150 : 150);
+    this.y = options.y || globals.height / 2;
 
     if (typeof module === "undefined") {
       this.clientInit();
@@ -29,7 +36,7 @@
 
   Player.prototype.clientInit = function() {
     this.texture = PIXI.Texture
-      .fromImage("public/images/bunny" + (_.keys(Pucko.players).length + 1) + ".png");
+      .fromImage("public/images/bunny" + (this.team + 1) + ".png");
     this.sprite = new PIXI.Sprite(this.texture);
 
     this.sprite.anchor.x = 0.5;
@@ -72,27 +79,27 @@
 
   Player.prototype.serverRemove = function() {
     // this.serverEvents.removeAllListeners();
-  }
+  };
 
   Player.prototype.localInit = function() {
     var player = this;
     $(document).on({
       "keydown": function(e) {
-        handler = keyDownEvents[e.keyCode]
+        handler = keyDownEvents[e.keyCode];
         if (handler) {
           handler();
         }
       },
       "keyup": function(e) {
-        handler = keyUpEvents[e.keyCode]
+        handler = keyUpEvents[e.keyCode];
         if (handler) {
           handler();
         }
       }
     });
 
-    Pucko.sync.trigger("playerConnected", player.id);
-  }
+    Pucko.sync.trigger("playerConnected", player.serialize());
+  };
 
   Player.prototype.remoteInit = function() {
     Pucko.sync.on("playerUpdate", function(e, data) {
@@ -100,7 +107,7 @@
       player.x = data.x;
       player.y = data.y;
     });
-  }
+  };
 
   Player.prototype.update = function(delta) {
     var secondsDelta = delta / 1000,
@@ -171,7 +178,6 @@
     this.dx *= globals.friction;
     this.dy *= globals.friction;
 
-    // this.y += this.dy;
     if (prevX != this.x || prevY != this.y)
       Pucko.sync.trigger("playerUpdate", this.serialize());
 
@@ -186,6 +192,7 @@
   Player.prototype.serialize = function() {
     return {
       id: this.id,
+      team: this.team,
       x: this.x,
       y: this.y,
       dx: this.dx,
@@ -195,6 +202,7 @@
   }
 
   Player.prototype.deserialize = function(properties) {
+    this.team = properties.team;
     this.x = properties.x;
     this.y = properties.y;
     this.dx = properties.dx;

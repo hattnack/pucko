@@ -14,23 +14,30 @@
       this.backgroundSprite.position.x = 0;
       this.backgroundSprite.position.y = 0;
 
+      this.teamScores = Pucko.sync.initData.teamScores || [0, 0];
+
       Pucko.stage.addChild(this.backgroundSprite);
 
       this.initPlayers(Pucko.sync.initData.players);
-      Pucko.sync.on("playerConnected", function(e, id) {
-        Pucko.players[id] = new Pucko.Player({id: id});
+      Pucko.sync.on("playerConnected", function(e, data) {
+        var newPlayer = new Pucko.Player({id: data.id, team: data.team});
+        newPlayer.deserialize(data);
+        Pucko.players[data.id] = newPlayer;
       });
       Pucko.sync.on("playerDisconnected", function(e, id) {
         Pucko.players[id].clientRemove();
         delete Pucko.players[id];
       });
 
+      Pucko.sync.on("score", function(event, data) {
+        Pucko.teamScores[data.team] = data.score;
+        console.log(Pucko.teamScores);
+      });
+
       Pucko.puck = new Pucko.Puck({});
 
-      if (_.keys(Pucko.players).length < 2) {
-        Pucko.localPlayer = new Pucko.Player({local: true, id: Pucko.sync.id});
-        Pucko.players[Pucko.sync.id] = Pucko.localPlayer;
-      }
+      Pucko.localPlayer = new Pucko.Player({local: true, id: Pucko.sync.id, team: Pucko.sync.initData.team});
+      Pucko.players[Pucko.sync.id] = Pucko.localPlayer;
 
       document.body.appendChild(this.renderer.view);
       requestAnimFrame(this.render.bind(this));
@@ -46,6 +53,7 @@
 
     initPlayers: function(players) {
       for (var i = players.length - 1; i >= 0; i--) {
+        console.log(players[i]);
         Pucko.players[players[i].id] = new Pucko.Player(players[i]);
       }
     }
