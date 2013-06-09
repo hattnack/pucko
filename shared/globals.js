@@ -4,7 +4,7 @@
     height: 300,
     goalWidth: 100,
     friction: 0.95,
-    blockingFriction: 0.8,
+    blockingFriction: 0.85,
     puckFriction: 0.98
   };
 
