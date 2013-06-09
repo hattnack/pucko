@@ -8,18 +8,21 @@ if (typeof require !== "undefined") {
   function Puck(options) {
     this.width = 20;
     this.height = 10;
-    this.x = globals.width / 2;
-    this.y = globals.height / 2;
     this.serverEvents = options.serverEvents || null;
-
-    this.dx = 0;
-    this.dy = 0;
-
+    this.reset();
     if (typeof module === "undefined") {
       this.clientInit();
     } else {
       this.serverInit();
     }
+  }
+
+  Puck.prototype.reset = function() {
+    this.inPlay = true;
+    this.x = globals.width / 2;
+    this.y = globals.height / 2;
+    this.dx = 0;
+    this.dy = 0;
   }
 
   Puck.prototype.clientInit = function() {
@@ -54,17 +57,35 @@ if (typeof require !== "undefined") {
   };
 
   Puck.prototype.update = function(delta) {
+    if (!this.inPlay) return;
     var secondsDelta = delta / 1000;
 
     this.x += this.dx;
     this.y += this.dy;
 
     if ((this.x + this.width / 2) > globals.width) {
-      this.dx *= -1;
-      this.x = globals.width - this.width / 2;
+      console.log(globals.height / 2 + globals.goalWidth / 2);
+      if (this.y < (globals.height / 2 + globals.goalWidth / 2) &&
+          this.y > (globals.height / 2 - globals.goalWidth / 2)) {
+        console.log("TEAM RED GOAL");
+        this.inPlay = false;
+        this.x = -100;
+        setTimeout(this.reset.bind(this), 2000);
+      } else {
+        this.dx *= -1;
+        this.x = globals.width - this.width / 2;
+      }
     } else if ((this.x - this.width / 2) < 0) {
-      this.dx *= -1;
-      this.x = 0 + this.width / 2;
+      if (this.y < (globals.height / 2 + globals.goalWidth / 2) &&
+          this.y > (globals.height / 2 - globals.goalWidth / 2)) {
+        console.log("TEAM BLUE GOAL");
+        this.inPlay = false;
+        this.x = -100;
+        setTimeout(this.reset.bind(this), 2000);
+      } else {
+        this.dx *= -1;
+        this.x = 0 + this.width / 2;
+      }
     }
 
     if ((this.y + this.height / 2) > globals.height) {

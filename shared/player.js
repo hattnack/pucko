@@ -173,7 +173,7 @@
 
     // this.y += this.dy;
     if (prevX != this.x || prevY != this.y)
-      Pucko.sync.trigger("playerUpdate", this.serialize())
+      Pucko.sync.trigger("playerUpdate", this.serialize());
 
     this.shooting = false;
   }

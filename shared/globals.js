@@ -2,6 +2,7 @@
   var globals = {
     width: 600,
     height: 300,
+    goalWidth: 100,
     friction: 0.95,
     puckFriction: 0.96
   };
