@@ -75,8 +75,8 @@ if (typeof require !== "undefined") {
       this.y = 0 + this.height / 2;
     }
 
-    this.dx *= globals.friction;
-    this.dy *= globals.friction;
+    this.dx *= globals.puckFriction;
+    this.dy *= globals.puckFriction;
   };
 
   Puck.prototype.shoot = function(player) {
@@ -97,9 +97,8 @@ if (typeof require !== "undefined") {
           force = 25;
         }
       }
-
-      this.dy += Math.sin(angle + Math.PI / 2) * force * 200 + player.dx * 2;
-      this.dx -= Math.cos(angle+Math.PI/2) * force * 200 + player.dy * 2;
+      this.dy += Math.sin(angle + Math.PI / 2) * force * 200 + player.dy;
+      this.dx -= Math.cos(angle + Math.PI / 2) * force * 200 - player.dx;
     }
   }
 

@@ -197,6 +197,8 @@
   Player.prototype.deserialize = function(properties) {
     this.x = properties.x;
     this.y = properties.y;
+    this.dx = properties.dx;
+    this.dy = properties.dy;
     this.shooting = properties.shooting;
   }
 
