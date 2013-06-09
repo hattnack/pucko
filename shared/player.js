@@ -84,6 +84,13 @@ if (typeof require !== "undefined") {
 
   Player.prototype.localInit = function() {
     var player = this;
+    var circle = new PIXI.Sprite(PIXI.Texture
+      .fromImage("public/images/circle.png"));
+    circle.position.x = -15;
+    circle.position.y = -5;
+    circle.alpha = 0.5;
+
+    this.sprite.addChildAt(circle, 0);
     $(document).on({
       "keydown": function(e) {
         handler = keyDownEvents[e.keyCode];
