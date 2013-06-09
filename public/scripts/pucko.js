@@ -18,6 +18,27 @@
 
       Pucko.stage.addChild(this.backgroundSprite);
 
+      var textStyle = {
+        font: 'lighter 70px helvetica neue',
+        fill: "rgba(189,71,71,0.2)"
+      }
+
+      this.leftPoints = new PIXI.Text('120', textStyle);
+      this.leftPoints.anchor.x = 0;
+      this.leftPoints.anchor.y = 0.15;
+      this.leftPoints.position.x = 30;
+      this.leftPoints.position.y = Pucko.globals.height / 2 - 70/2;
+
+      this.rightPoints = new PIXI.Text('3230', textStyle);
+      this.rightPoints.anchor.x = 1;
+      this.rightPoints.anchor.y = 0.15;
+
+      this.rightPoints.position.x = Pucko.globals.width - 30;
+      this.rightPoints.position.y = Pucko.globals.height / 2 - 70/2;
+      // this.leftPoints.position.y = Pucko.stage
+      this.stage.addChild(this.leftPoints);
+      this.stage.addChild(this.rightPoints);
+
       this.initPlayers(Pucko.sync.initData.players);
       Pucko.sync.on("playerConnected", function(e, data) {
         var newPlayer = new Pucko.Player({id: data.id, team: data.team});
