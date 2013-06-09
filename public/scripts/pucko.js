@@ -10,7 +10,6 @@
       this.stage = new PIXI.Stage(0x66FF99);
       this.renderer = PIXI.autoDetectRenderer(Pucko.globals.width, Pucko.globals.height);
 
-      console.log(this);
       this.initPlayers(Pucko.sync.initData.players);
       Pucko.sync.on("playerConnected", function(e, id) {
         Pucko.players[id] = new Pucko.Player({id: id});
