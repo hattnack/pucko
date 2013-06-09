@@ -6,12 +6,11 @@
 
     // add the renderer view element to the DOM
     document.body.appendChild(renderer.view);
-    console.log(renderer);
 
     requestAnimFrame( animate );
 
     // create a texture from an image path
-    availableControls = new Array([65,68,83,87,70], [37,39,40,38,191]);
+    availableControls = new Array([37,39,40,38,191]);
 
     var Player = function(){
         var player = this;
@@ -31,8 +30,9 @@
         this.bunny = new PIXI.Sprite(this.texture);
 
 
+        Sync.trigger("playerConnected");
+
         var move = function(e){
-                 console.log(e.keyCode);
                 switch(e.keyCode){
                     case controlSchema[0]:
                         player.left = true;
@@ -59,7 +59,6 @@
         }
 
         var stopMove = function(e){
-                 console.log(e.keyCode);
                 switch(e.keyCode){
                     case controlSchema[0]:
                         player.left = false;
@@ -85,7 +84,7 @@
         $(document).keydown(function(e) { move(e) });
         $(document).keyup(function(e) { stopMove(e) });
 
-        
+
     }
     // create a new Sprite using the texture
     var player = new Player();
@@ -106,21 +105,21 @@
         // just for fun, lets rotate mr rabbit a little
         if (player.left) {
             player.bunny.position.x -= player.speed;
-            
+
         }
         if (player.right) {
             player.bunny.position.x += player.speed;
-            
+
         }if (player.up) {
             player.bunny.position.y -= player.speed;
-            
+
         }if (player.down) {
             player.bunny.position.y += player.speed;
-            
+
         }
         // player.bunny.rotation += 0.1;
         // bunny.position.x += 1.1;
 
-        // render the stage   
+        // render the stage
         renderer.render(stage);
     }
