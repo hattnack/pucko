@@ -68,7 +68,7 @@
   }
 
   Player.prototype.serverRemove = function() {
-    this.serverEvents.removeAllListeners();
+    // this.serverEvents.removeAllListeners();
   }
 
   Player.prototype.localInit = function() {
