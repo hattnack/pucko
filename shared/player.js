@@ -11,6 +11,8 @@
       down: false
     };
 
+    this.shooting = true
+
     this.speed = 120;
     this.dx = 0;
     this.dy = 0;
@@ -39,7 +41,7 @@
 
     var player = this;
     Pucko.$.on("beforeRender." + this.id, function(e, data) {
-      player.move(data.delta);
+      player.update(data.delta);
       player.render();
     });
 
@@ -57,10 +59,13 @@
 
   Player.prototype.serverInit = function() {
     var player = this;
-    this.serverEvents.on("playerMove", function(data) {
+    this.serverEvents.on("playerUpdate", function(data) {
       if (data.id !== player.id) return;
-      player.x = data.x;
-      player.y = data.y;
+      player.deserialize(data);
+      if (player.shooting) {
+        player.serverEvents.emit("playerShoot", player.serialize());
+        player.shooting = false;
+      }
     });
   }
 
@@ -89,14 +94,14 @@
   }
 
   Player.prototype.remoteInit = function() {
-    Pucko.sync.on("playerMove", function(e, data) {
+    Pucko.sync.on("playerUpdate", function(e, data) {
       var player = Pucko.players[data.id];
       player.x = data.x;
       player.y = data.y;
     });
   }
 
-  Player.prototype.move = function(delta) {
+  Player.prototype.update = function(delta) {
     var secondsDelta = delta / 1000,
         prevX = this.x,
         prevY = this.y,
@@ -140,10 +145,7 @@
       } else {
         this.dy = speed;
       }
-
     }
-
-
 
     this.x += this.dx;
     this.y += this.dy;
@@ -164,22 +166,37 @@
       this.y = 0 + this.texture.height/2;
       this.dy *= -1;
     }
+
+    this.dx *= globals.friction;
+    this.dy *= globals.friction;
+
     // this.y += this.dy;
     if (prevX != this.x || prevY != this.y)
-      Pucko.sync.trigger("playerMove", {id: this.id, x: this.x, y: this.y })
+      Pucko.sync.trigger("playerUpdate", this.serialize())
+
+    this.shooting = false;
   }
 
   Player.prototype.render = function() {
     this.sprite.position.x = this.x;
     this.sprite.position.y = this.y;
-
-    this.dx *= Pucko.globals.friction;
-    this.dy *= Pucko.globals.friction;
-    // console.log(Pucko.globals);
   }
 
   Player.prototype.serialize = function() {
-    return {id: this.id, x: this.x, y: this.y };
+    return {
+      id: this.id,
+      x: this.x,
+      y: this.y,
+      dx: this.dx,
+      dy: this.dy,
+      shooting: this.shooting
+    };
+  }
+
+  Player.prototype.deserialize = function(properties) {
+    this.x = properties.x;
+    this.y = properties.y;
+    this.shooting = properties.shooting;
   }
 
   var keyDownEvents = {
@@ -194,6 +211,9 @@
     },
     "38": function() {
       Pucko.localPlayer.moving.up = true;
+    },
+    "32": function() {
+      Pucko.localPlayer.shooting = true;
     }
   }
 
@@ -209,6 +229,9 @@
     },
     "38": function() {
       Pucko.localPlayer.moving.up = false;
+    },
+    "32": function() {
+      Pucko.localPlayer.shooting = false;
     }
   }
 
