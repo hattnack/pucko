@@ -61,6 +61,12 @@ if (typeof require !== "undefined") {
     if (!this.inPlay) return;
     var secondsDelta = delta / 1000;
 
+    this.dx = Math.min(30, this.dx);
+    this.dx = Math.max(-30, this.dx);
+
+    this.dy = Math.min(30, this.dy);
+    this.dy = Math.max(-30, this.dy);
+
     this.x += this.dx;
     this.y += this.dy;
 
