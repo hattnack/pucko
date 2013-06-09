@@ -102,42 +102,46 @@
   Player.prototype.move = function(delta) {
     var secondsDelta = delta / 1000,
         prevX = this.x,
-        prevY = this.y;
+        prevY = this.y,
+        speed = this.speed,
+        acc = this.acc;
+
+    if ((this.moving.up || this.moving.down) &&
+        (this.moving.left || this.moving.right)) {
+      speed = Math.sqrt(speed * speed / 2);
+      acc = Math.sqrt(acc * acc / 2);
+    }
 
     if (this.moving.left) {
-      if(this.dx > -this.speed){
-        this.dx -= this.acc;
+      if(this.dx > -speed){
+        this.dx -= acc;
       } else {
-        this.dx = -this.speed;
+        this.dx = -speed;
       }
-      // this.x -= this.speed * secondsDelta;
     }
 
     if (this.moving.right) {
-      if(this.dx < this.speed){
-        this.dx += this.acc;
+      if(this.dx < speed){
+        this.dx += acc;
       } else {
-        this.dx = this.speed;
+        this.dx = speed;
       }
-      // this.x += this.speed * secondsDelta;
     }
 
     if (this.moving.up) {
-      // this.y -= this.speed * secondsDelta;
-      if(this.dy > -this.speed){
-        this.dy -= this.acc;
+      if(this.dy > -speed){
+        this.dy -= acc;
       } else {
-        this.dy = -this.speed;
+        this.dy = -speed;
       }
-      
+
     }
 
     if (this.moving.down) {
-      // this.y += this.speed * secondsDelta;
-      if(this.dy < this.speed){
-        this.dy += this.acc;
+      if(this.dy < speed){
+        this.dy += acc;
       } else {
-        this.dy = this.speed;
+        this.dy = speed;
       }
 
     }
@@ -146,21 +150,21 @@
 
     this.x += this.dx;
     this.y += this.dy;
-    if(this.x + this.texture.width/2 >= Pucko.data.width) { 
+    if(this.x + this.texture.width/2 >= Pucko.data.width) {
       this.x = Pucko.data.width - this.texture.width;
       this.dx *= -1;
     }
     if(this.x <= 0 + this.texture.width/2){
       this.x = 0 + this.texture.width/2;
-      this.dx *= -1; 
+      this.dx *= -1;
     }
     if(this.y + this.texture.height/2 >= Pucko.data.height){
       this.y = Pucko.data.height - this.texture.height/2;
-      this.dy *= -1; 
+      this.dy *= -1;
     }
     if(this.y <= 0 + this.texture.height/2){
       this.y = 0 + this.texture.height/2;
-      this.dy *= -1;  
+      this.dy *= -1;
     }
     // this.y += this.dy;
     if (prevX != this.x || prevY != this.y)
