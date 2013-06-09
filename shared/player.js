@@ -32,13 +32,10 @@
     this.sprite.anchor.x = 0.5;
     this.sprite.anchor.y = 0.5;
 
-    console.log(Pucko);
     this.sprite.position.x = this.x;
     this.sprite.position.y = this.y;
 
     Pucko.stage.addChild(this.sprite);
-
-    console.log(Pucko.globals.friction);
 
     var player = this;
     Pucko.$.on("beforeRender." + this.id, function(e, data) {
@@ -151,7 +148,8 @@
     this.x += this.dx;
     this.y += this.dy;
     if(this.x + this.texture.width/2 >= Pucko.globals.width) {
-      this.x = Pucko.globals.width - this.texture.width;
+      this.x = Pucko.globals.width - this.texture.width/2;
+
       this.dx *= -1;
     }
     if(this.x <= 0 + this.texture.width/2){
