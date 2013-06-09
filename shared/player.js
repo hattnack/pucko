@@ -187,13 +187,14 @@ if (typeof require !== "undefined") {
     this.dx *= globals.friction;
     this.dy *= globals.friction;
 
+
+    if (prevX != this.x || prevY != this.y)
+      Pucko.sync.trigger("playerUpdate", this.serialize());
+
     if (this.blocking) {
       this.dx *= globals.blockingFriction;
       this.dy *= globals.blockingFriction;
     }
-
-    if (prevX != this.x || prevY != this.y)
-      Pucko.sync.trigger("playerUpdate", this.serialize());
 
     this.shooting = false;
   }
@@ -227,18 +228,15 @@ if (typeof require !== "undefined") {
   }
 
   var keyDownEvents = {
-    "37": function() {
-      Pucko.localPlayer.moving.left = true;
-    },
-    "39": function() {
-      Pucko.localPlayer.moving.right = true;
-    },
-    "40": function() {
-      Pucko.localPlayer.moving.down = true;
-    },
-    "38": function() {
-      Pucko.localPlayer.moving.up = true;
-    },
+    "37": function() { Pucko.localPlayer.moving.left = true; },
+    "65": function() { Pucko.localPlayer.moving.left = true; },
+    "39": function() { Pucko.localPlayer.moving.right = true; },
+    "68": function() { Pucko.localPlayer.moving.right = true; },
+    "40": function() { Pucko.localPlayer.moving.down = true; },
+    "83": function() { Pucko.localPlayer.moving.down = true; },
+    "38": function() { Pucko.localPlayer.moving.up = true; },
+    "87": function() { Pucko.localPlayer.moving.up = true; },
+
     "32": function() {
       Pucko.localPlayer.blocking = true;
       Pucko.localPlayer.shooting = true;
@@ -246,18 +244,14 @@ if (typeof require !== "undefined") {
   }
 
   var keyUpEvents = {
-    "37": function() {
-      Pucko.localPlayer.moving.left = false;
-    },
-    "39": function() {
-      Pucko.localPlayer.moving.right = false;
-    },
-    "40": function() {
-      Pucko.localPlayer.moving.down = false;
-    },
-    "38": function() {
-      Pucko.localPlayer.moving.up = false;
-    },
+    "37": function() { Pucko.localPlayer.moving.left = false; },
+    "65": function() { Pucko.localPlayer.moving.left = false; },
+    "39": function() { Pucko.localPlayer.moving.right = false; },
+    "68": function() { Pucko.localPlayer.moving.right = false; },
+    "40": function() { Pucko.localPlayer.moving.down = false; },
+    "83": function() { Pucko.localPlayer.moving.down = false; },
+    "38": function() { Pucko.localPlayer.moving.up = false; },
+    "87": function() { Pucko.localPlayer.moving.up = false; },
     "32": function() {
       Pucko.localPlayer.blocking = false;
       Pucko.localPlayer.shooting = false;
