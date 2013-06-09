@@ -38,7 +38,7 @@
 
     Pucko.stage.addChild(this.sprite);
 
-    console.log(Pucko.data.friction);
+    console.log(Pucko.globals.friction);
 
     var player = this;
     Pucko.$.on("beforeRender." + this.id, function(e, data) {
@@ -150,16 +150,16 @@
 
     this.x += this.dx;
     this.y += this.dy;
-    if(this.x + this.texture.width/2 >= Pucko.data.width) {
-      this.x = Pucko.data.width - this.texture.width;
+    if(this.x + this.texture.width/2 >= Pucko.globals.width) {
+      this.x = Pucko.globals.width - this.texture.width;
       this.dx *= -1;
     }
     if(this.x <= 0 + this.texture.width/2){
       this.x = 0 + this.texture.width/2;
       this.dx *= -1;
     }
-    if(this.y + this.texture.height/2 >= Pucko.data.height){
-      this.y = Pucko.data.height - this.texture.height/2;
+    if(this.y + this.texture.height/2 >= Pucko.globals.height){
+      this.y = Pucko.globals.height - this.texture.height/2;
       this.dy *= -1;
     }
     if(this.y <= 0 + this.texture.height/2){
@@ -175,9 +175,9 @@
     this.sprite.position.x = this.x;
     this.sprite.position.y = this.y;
 
-    this.dx *= Pucko.data.friction;
-    this.dy *= Pucko.data.friction;
-    // console.log(Pucko.data);
+    this.dx *= Pucko.globals.friction;
+    this.dy *= Pucko.globals.friction;
+    // console.log(Pucko.globals);
   }
 
   Player.prototype.serialize = function() {

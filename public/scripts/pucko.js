@@ -6,14 +6,9 @@
     renderer: null,
     players: {},
 
-    data: {
-      width: 600,
-      height: 300,
-      friction: 0.95,
-    },
     init: function() {
       this.stage = new PIXI.Stage(0x66FF99);
-      this.renderer = PIXI.autoDetectRenderer(this.data.width, this.data.height);
+      this.renderer = PIXI.autoDetectRenderer(Pucko.globals.width, Pucko.globals.height);
 
       console.log(this);
       this.initPlayers(Pucko.sync.initData.players);
