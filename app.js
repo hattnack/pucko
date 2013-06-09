@@ -67,6 +67,19 @@ serverEvents.on("score", function(team) {
   }
 });
 
+serverEvents.on("shoot", function(force) {
+  json = JSON.stringify({
+    event: "shake",
+    data: {
+      intensity: Math.ceil(force * 50)
+    }
+  });
+
+  for (var clientID in clients) {
+      clients[clientID].connection.sendUTF(json);
+  }
+});
+
 function setupConnection(connection) {
   var ID = currentID++;
   var players = (function() {

@@ -14,6 +14,8 @@
       this.backgroundSprite.position.x = 0;
       this.backgroundSprite.position.y = 0;
 
+      this.stage.position.x = 100;
+
       this.teamScores = Pucko.sync.initData.teamScores || [0, 0];
 
       Pucko.stage.addChild(this.backgroundSprite);
@@ -56,6 +58,10 @@
         Pucko.rightPoints.setText("" + Pucko.teamScores[1]);
       });
 
+      Pucko.sync.on("shake", function(event, data) {
+        Pucko.shake(data.intensity);
+      });
+
       Pucko.puck = new Pucko.Puck({});
 
       Pucko.localPlayer = new Pucko.Player({local: true, id: Pucko.sync.id, team: Pucko.sync.initData.team});
@@ -78,6 +84,16 @@
         console.log(players[i]);
         Pucko.players[players[i].id] = new Pucko.Player(players[i]);
       }
+    },
+
+    shake: function(intensity) {
+      var $canvas = $("canvas");
+      var x = intensity * (Math.random() > 0.5 ? -1 : 1);
+      var y = intensity * (Math.random() > 0.5 ? -1 : 1);
+      $canvas.css("-webkit-transform", "translate3D(" + x + "px," + y + "px, 0)");
+      setTimeout(function() {
+        $canvas.css("-webkit-transform", "none");
+      }, 50);
     }
   });
 
