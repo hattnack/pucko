@@ -118,8 +118,8 @@ if (typeof require !== "undefined") {
           force = 25;
         }
       }
-      this.dy += Math.sin(angle + Math.PI / 2) * force * 200 + player.dy;
-      this.dx -= Math.cos(angle + Math.PI / 2) * force * 200 - player.dx;
+      this.dy += Math.sin(angle + Math.PI / 2) * force * 200 + player.dy * 2;
+      this.dx -= Math.cos(angle + Math.PI / 2) * force * 200 - player.dx * 2;
     }
   }
 

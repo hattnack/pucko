@@ -4,7 +4,7 @@
     height: 300,
     goalWidth: 100,
     friction: 0.95,
-    puckFriction: 0.96
+    puckFriction: 0.98
   };
 
   if (typeof module !== "undefined") {
