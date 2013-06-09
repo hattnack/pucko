@@ -25,6 +25,8 @@
         delete Pucko.players[id];
       });
 
+      Pucko.puck = new Pucko.Puck({});
+
       if (_.keys(Pucko.players).length < 2) {
         Pucko.localPlayer = new Pucko.Player({local: true, id: Pucko.sync.id});
         Pucko.players[Pucko.sync.id] = Pucko.localPlayer;

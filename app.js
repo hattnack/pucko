@@ -11,7 +11,8 @@ var express = require('express')
   , clients = {}
   , serverEvents = new (require('events').EventEmitter)()
   , lastFrameTime = Date.now()
-  , Player = require('./shared/player');
+  , Player = require('./shared/player')
+  , puck = new (require('./shared/puck'))({serverEvents: serverEvents});
 
 var app = express();
 
@@ -51,7 +52,6 @@ webSocketServer.on("request", function(req) {
 setInterval(nextFrame, 1000 / 60);
 
 function setupConnection(connection) {
-  console.log("new");
   var ID = currentID++;
   var players = (function() {
     var players = [];
@@ -106,4 +106,5 @@ function setupConnection(connection) {
 function nextFrame() {
   serverEvents.emit("frame", Date.now() - lastFrameTime);
   lastFrameTime = Date.now();
+  puck.sync(clients);
 }
