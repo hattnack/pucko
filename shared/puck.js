@@ -54,6 +54,7 @@ if (typeof require !== "undefined") {
     var puck = this;
     this.serverEvents.on("frame", this.update.bind(this));
     this.serverEvents.on("playerShoot", this.shoot.bind(this));
+    this.serverEvents.on("playerUpdate", this.dribble.bind(this));
   };
 
   Puck.prototype.update = function(delta) {
@@ -98,6 +99,30 @@ if (typeof require !== "undefined") {
     this.inPlay = false;
     this.x = -100;
     setTimeout(this.reset.bind(this), 2000);
+  };
+
+  Puck.prototype.dribble = function(player) {
+    var x = player.x,
+        y = player.y,
+        xDistance = this.x - x,
+        yDistance = this.y - y;
+
+    if (Math.abs(xDistance) <= 50 && Math.abs(yDistance) <= 50) {
+      var angle = Math.atan2(xDistance, yDistance),
+          force;
+
+      if (Math.abs(xDistance) < 10 && Math.abs(yDistance) < 10 && player.blocking) {
+        this.dx = 0;
+        this.dy = 0;
+      }
+
+      force =  1 / Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+      if (force > 25) {
+        force = 25;
+      }
+      this.dy += Math.sin(angle + Math.PI / 2) * force * 2 + player.dy * 0.01;
+      this.dx -= Math.cos(angle + Math.PI / 2) * force * 2 - player.dx * 0.01;
+    }
   }
 
   Puck.prototype.shoot = function(player) {

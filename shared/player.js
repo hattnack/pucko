@@ -18,7 +18,8 @@ if (typeof require !== "undefined") {
       down: false
     };
 
-    this.shooting = true;
+    this.shooting = false;
+    this.blocking = false;
 
     this.speed = 120;
     this.dx = 0;
@@ -116,6 +117,7 @@ if (typeof require !== "undefined") {
         speed = this.speed,
         acc = this.acc;
 
+
     if ((this.moving.up || this.moving.down) &&
         (this.moving.left || this.moving.right)) {
       speed = Math.sqrt(speed * speed / 2);
@@ -178,6 +180,11 @@ if (typeof require !== "undefined") {
     this.dx *= globals.friction;
     this.dy *= globals.friction;
 
+    if (this.blocking) {
+      this.dx *= globals.blockingFriction;
+      this.dy *= globals.blockingFriction;
+    }
+
     if (prevX != this.x || prevY != this.y)
       Pucko.sync.trigger("playerUpdate", this.serialize());
 
@@ -197,6 +204,7 @@ if (typeof require !== "undefined") {
       y: this.y,
       dx: this.dx,
       dy: this.dy,
+      blocking: this.blocking,
       shooting: this.shooting
     };
   }
@@ -207,6 +215,7 @@ if (typeof require !== "undefined") {
     this.y = properties.y;
     this.dx = properties.dx;
     this.dy = properties.dy;
+    this.blocking = properties.blocking;
     this.shooting = properties.shooting;
   }
 
@@ -224,6 +233,7 @@ if (typeof require !== "undefined") {
       Pucko.localPlayer.moving.up = true;
     },
     "32": function() {
+      Pucko.localPlayer.blocking = true;
       Pucko.localPlayer.shooting = true;
     }
   }
@@ -242,6 +252,7 @@ if (typeof require !== "undefined") {
       Pucko.localPlayer.moving.up = false;
     },
     "32": function() {
+      Pucko.localPlayer.blocking = false;
       Pucko.localPlayer.shooting = false;
     }
   }
