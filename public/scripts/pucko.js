@@ -67,7 +67,7 @@
       Pucko.localPlayer = new Pucko.Player({local: true, id: Pucko.sync.id, team: Pucko.sync.initData.team});
       Pucko.players[Pucko.sync.id] = Pucko.localPlayer;
 
-      document.body.appendChild(this.renderer.view);
+      document.getElementById("game").appendChild(this.renderer.view);
       requestAnimFrame(this.render.bind(this));
     },
 
