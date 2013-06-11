@@ -19,7 +19,7 @@
   };
   Pucko.sync.$ = $(Pucko.sync);
 
-  websocket = new WebSocket("ws://" + window.location.hostname + ":3000");
+  websocket = new WebSocket("ws://" + window.location.host);
 
   websocket.addEventListener("open", function() {
     Pucko.sync.one("receiveInitData", function(e, data) {
