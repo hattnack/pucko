@@ -131,6 +131,8 @@ function setupConnection(connection) {
       clients[ID].player.serverRemove();
       teamPlayers[clients[ID].player.team]--;
 
+      // Reset scores when no players remain
+      if (teamPlayers[0] === 0 && teamPlayers[1] === 0) teamScores = [0, 0];
 
       for (var clientID in clients) {
         if (+clientID !== ID) {
