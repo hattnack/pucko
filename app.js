@@ -80,6 +80,10 @@ serverEvents.on("shoot", function(force) {
   }
 });
 
+serverEvents.on("playerUpdate", function(data) {
+  clients[data.id].player.serverOnPlayerUpdate(data);
+});
+
 function setupConnection(connection) {
   var ID = currentID++;
   var players = (function() {
@@ -126,6 +130,8 @@ function setupConnection(connection) {
     if(clients[ID].player) {
       clients[ID].player.serverRemove();
       teamPlayers[clients[ID].player.team]--;
+
+
       for (var clientID in clients) {
         if (+clientID !== ID) {
           client = clients[clientID].connection.sendUTF(JSON.stringify({

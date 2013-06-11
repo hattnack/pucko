@@ -67,19 +67,18 @@ if (typeof require !== "undefined") {
   }
 
   Player.prototype.serverInit = function() {
-    var player = this;
-    this.serverEvents.on("playerUpdate", function(data) {
-      if (data.id !== player.id) return;
-      player.deserialize(data);
-      if (player.shooting) {
-        player.serverEvents.emit("playerShoot", player.serialize());
-        player.shooting = false;
+  };
+
+  Player.prototype.serverOnPlayerUpdate = function(data) {
+      if (data.id !== this.id) return;
+      this.deserialize(data);
+      if (this.shooting) {
+        this.serverEvents.emit("playerShoot", this.serialize());
+        this.shooting = false;
       }
-    });
   }
 
   Player.prototype.serverRemove = function() {
-    // this.serverEvents.removeAllListeners();
   };
 
   Player.prototype.localInit = function() {
